@@ -52,7 +52,7 @@ export default function AuthPage() {
     if (step === "auth") setStep("skills");
     else if (step === "skills") setStep("experience");
     else if (step === "experience") setStep("goals");
-    else setLocation("/");
+    else setLocation("/dashboard");
   };
 
   return (
