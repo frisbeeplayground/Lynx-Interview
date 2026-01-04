@@ -107,20 +107,20 @@ export default function AuthPage() {
                       <CardDescription>Enter your credentials to continue your preparation.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Social Logins */}
+                      {/* Colorful Social Logins */}
                       <div className="grid grid-cols-3 gap-3 mb-2">
-                        <Button variant="outline" className="rounded-xl h-10 px-0">
-                          <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-red-500/50 hover:bg-red-500/5 transition-colors group">
+                          <svg className="w-5 h-5 text-[#DB4437] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032 s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12 s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
                           </svg>
                         </Button>
-                        <Button variant="outline" className="rounded-xl h-10 px-0">
-                          <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-black/50 hover:bg-black/5 transition-colors group">
+                          <svg className="w-5 h-5 text-[#24292e] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M12,2C6.477,2,2,6.477,2,12c0,4.419,2.865,8.166,6.839,9.489c0.5,0.092,0.682-0.217,0.682-0.482 c0-0.237-0.008-0.866-0.013-1.7c-2.782,0.603-3.369-1.341-3.369-1.341c-0.455-1.157-1.11-1.465-1.11-1.465 c-0.908-0.62,0.069-0.608,0.069-0.608c1.003,0.07,1.531,1.03,1.531,1.03c0.891,1.527,2.338,1.086,2.907,0.831 c0.091-0.645,0.348-1.086,0.634-1.336c-2.22-0.252-4.555-1.111-4.555-4.943c0-1.091,0.39-1.984,1.029-2.683 c-0.103-0.253-0.446-1.27,0.098-2.647c0,0,0.84-0.269,2.75,1.025C10.295,7.538,11.148,7.41,12,7.405 c0.851,0.005,1.705,0.133,2.504,0.367c1.909-1.294,2.748-1.025,2.748-1.025c0.546,1.377,0.202,2.394,0.1,2.647 c0.64,0.699,1.028,1.592,1.028,2.683c0,3.842-2.339,4.687-4.566,4.935c0.359,0.309,0.678,0.92,0.678,1.855 c0,1.338-0.012,2.419-0.012,2.747c0,0.268,0.18,0.579,0.688,0.481C19.137,20.161,22,16.416,22,12C22,6.477,17.523,2,12,2z"/>
                           </svg>
                         </Button>
-                        <Button variant="outline" className="rounded-xl h-10 px-0">
-                          <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-blue-400/50 hover:bg-blue-400/5 transition-colors group">
+                          <svg className="w-5 h-5 text-[#1DA1F2] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                           </svg>
                         </Button>
@@ -151,12 +151,35 @@ export default function AuthPage() {
                   </Card>
                 </TabsContent>
                 <TabsContent value="signup">
-                  <Card className="border-border/50 shadow-xl">
+                  <Card className="border-border/50 shadow-xl overflow-hidden">
                     <CardHeader>
                       <CardTitle className="font-display">Create Account</CardTitle>
                       <CardDescription>Join 2,000+ candidates mastering their interviews.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                      {/* Colorful Social Signups */}
+                      <div className="grid grid-cols-3 gap-3 mb-2">
+                        <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-red-500/50 hover:bg-red-500/5 transition-colors group">
+                          <svg className="w-5 h-5 text-[#DB4437] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032 s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12 s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                          </svg>
+                        </Button>
+                        <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-black/50 hover:bg-black/5 transition-colors group">
+                          <svg className="w-5 h-5 text-[#24292e] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12,2C6.477,2,2,6.477,2,12c0,4.419,2.865,8.166,6.839,9.489c0.5,0.092,0.682-0.217,0.682-0.482 c0-0.237-0.008-0.866-0.013-1.7c-2.782,0.603-3.369-1.341-3.369-1.341c-0.455-1.157-1.11-1.465-1.11-1.465 c-0.908-0.62,0.069-0.608,0.069-0.608c1.003,0.07,1.531,1.03,1.531,1.03c0.891,1.527,2.338,1.086,2.907,0.831 c0.091-0.645,0.348-1.086,0.634-1.336c-2.22-0.252-4.555-1.111-4.555-4.943c0-1.091,0.39-1.984,1.029-2.683 c-0.103-0.253-0.446-1.27,0.098-2.647c0,0,0.84-0.269,2.75,1.025C10.295,7.538,11.148,7.41,12,7.405 c0.851,0.005,1.705,0.133,2.504,0.367c1.909-1.294,2.748-1.025,2.748-1.025c0.546,1.377,0.202,2.394,0.1,2.647 c0.64,0.699,1.028,1.592,1.028,2.683c0,3.842-2.339,4.687-4.566,4.935c0.359,0.309,0.678,0.92,0.678,1.855 c0,1.338-0.012,2.419-0.012,2.747c0,0.268,0.18,0.579,0.688,0.481C19.137,20.161,22,16.416,22,12C22,6.477,17.523,2,12,2z"/>
+                          </svg>
+                        </Button>
+                        <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-blue-400/50 hover:bg-blue-400/5 transition-colors group">
+                          <svg className="w-5 h-5 text-[#1DA1F2] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                          </svg>
+                        </Button>
+                      </div>
+                      <div className="relative">
+                        <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/50"></span></div>
+                        <div className="relative flex justify-center text-[10px] uppercase"><span className="bg-card px-2 text-muted-foreground">Or sign up with email</span></div>
+                      </div>
+
                       <div className="space-y-2">
                         <Label htmlFor="signup-email">Email</Label>
                         <Input id="signup-email" type="email" placeholder="name@company.com" className="rounded-xl" />
