@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as React from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,34 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ChevronRight, Briefcase, Target, GraduationCap, Code2, Sparkles, Cat } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
+
+// Simple fallback Tabs for debugging
+const SimpleTabs = ({ children, defaultValue }: { children: React.ReactNode, defaultValue: string }) => {
+  const [active, setActive] = useState(defaultValue);
+  return (
+    <div className="w-full">
+      <div className="flex bg-muted p-1 rounded-lg mb-6">
+        {React.Children.map(children, (child: any) => {
+          if (child.type === TabsList) {
+            return React.Children.map(child.props.children, (trigger: any) => (
+              <button
+                className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${active === trigger.props.value ? 'bg-background shadow text-foreground' : 'text-muted-foreground'}`}
+                onClick={() => setActive(trigger.props.value)}
+              >
+                {trigger.props.children}
+              </button>
+            ));
+          }
+        })}
+      </div>
+      {React.Children.map(children, (child: any) => {
+        if (child.type === TabsContent && child.props.value === active) {
+          return child.props.children;
+        }
+      })}
+    </div>
+  );
+};
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
@@ -52,7 +81,7 @@ export default function AuthPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              <Tabs defaultValue="login" className="w-full">
+              <SimpleTabs defaultValue="login">
                 <TabsList className="grid w-full grid-cols-2 mb-6">
                   <TabsTrigger value="login">Login</TabsTrigger>
                   <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -101,7 +130,7 @@ export default function AuthPage() {
                     </CardContent>
                   </Card>
                 </TabsContent>
-              </Tabs>
+              </SimpleTabs>
             </motion.div>
           )}
 
