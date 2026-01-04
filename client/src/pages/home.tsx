@@ -1,10 +1,12 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Zap, Target, Video, Mic, MessageSquare, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
+  const [, setLocation] = useLocation();
+
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/20">
       {/* Navigation */}
@@ -20,8 +22,8 @@ export default function Home() {
             <a href="#" className="hover:text-foreground transition-colors">Resources</a>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="hidden sm:inline-flex">Log in</Button>
-            <Button size="sm" className="rounded-full px-6">Get Started</Button>
+            <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => setLocation("/auth")}>Log in</Button>
+            <Button size="sm" className="rounded-full px-6" onClick={() => setLocation("/auth")}>Get Started</Button>
           </div>
         </div>
       </nav>
@@ -47,7 +49,7 @@ export default function Home() {
                 Practice with an AI that mimics the world's toughest interviewers. Get real-time feedback on your body language, technical depth, and soft skills.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="rounded-xl px-8 text-base h-14 shadow-lg shadow-primary/20">
+                <Button size="lg" className="rounded-xl px-8 text-base h-14 shadow-lg shadow-primary/20" onClick={() => setLocation("/auth")}>
                   Start Practice Session
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
