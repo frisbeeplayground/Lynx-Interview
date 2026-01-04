@@ -73,6 +73,18 @@ export default function AuthPage() {
           <span className="font-display font-bold text-2xl tracking-tight">LynxIQ</span>
         </div>
 
+        {/* Brand Stats */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-4 text-center">
+            <div className="text-2xl font-bold font-display text-primary">2,482</div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Active Now</div>
+          </div>
+          <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-4 text-center">
+            <div className="text-2xl font-bold font-display text-primary">150+</div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Hiring Partners</div>
+          </div>
+        </div>
+
         <AnimatePresence mode="wait">
           {step === "auth" && (
             <motion.div
@@ -101,10 +113,15 @@ export default function AuthPage() {
                         <Label htmlFor="password">Password</Label>
                         <Input id="password" type="password" className="rounded-xl" />
                       </div>
-                      <Button onClick={nextStep} className="w-full rounded-xl h-12 text-base font-semibold group">
-                        Sign In
-                        <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Button>
+                      <div className="flex gap-3">
+                        <Button variant="outline" onClick={() => setLocation("/")} className="flex-1 rounded-xl h-12">
+                          Cancel
+                        </Button>
+                        <Button onClick={nextStep} className="flex-[2] rounded-xl h-12 text-base font-semibold group">
+                          Sign In
+                          <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -123,10 +140,15 @@ export default function AuthPage() {
                         <Label htmlFor="signup-password">Password</Label>
                         <Input id="signup-password" type="password" className="rounded-xl" />
                       </div>
-                      <Button onClick={nextStep} className="w-full rounded-xl h-12 text-base font-semibold group">
-                        Get Started
-                        <Sparkles className="ml-2 w-4 h-4" />
-                      </Button>
+                      <div className="flex gap-3">
+                        <Button variant="outline" onClick={() => setLocation("/")} className="flex-1 rounded-xl h-12">
+                          Cancel
+                        </Button>
+                        <Button onClick={nextStep} className="flex-[2] rounded-xl h-12 text-base font-semibold group">
+                          Get Started
+                          <Sparkles className="ml-2 w-4 h-4" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
