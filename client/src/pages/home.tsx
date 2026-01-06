@@ -358,33 +358,3 @@ function CoursePreview({ title, instructor, date, tag }: { title: string, instru
     </div>
   );
 }
-
-
-function LearningModuleSmall({ icon, title }: { icon: React.ReactNode, title: string }) {
-  return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 border border-border/50 hover:bg-white hover:shadow-md transition-all cursor-pointer">
-      <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center">
-        {icon}
-      </div>
-      <span className="text-xs font-bold">{title}</span>
-    </div>
-  );
-}
-
-function UpskillCard({ icon, title, description, color }: { icon: React.ReactNode, title: string, description: string, color: string }) {
-  return (
-    <div className="group relative bg-white border border-border/50 rounded-2xl p-8 hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-      <div className={`w-14 h-14 rounded-2xl ${color} text-white flex items-center justify-center mb-6 shadow-lg shadow-black/5`}>
-        {icon}
-      </div>
-      <h3 className="text-xl font-bold mb-3 font-display">{title}</h3>
-      <p className="text-muted-foreground leading-relaxed text-sm">
-        {description}
-      </p>
-      <div className="mt-8 pt-6 border-t border-border/20 flex items-center justify-between text-primary font-bold text-sm group-hover:translate-x-1 transition-transform">
-        Explore Module
-        <ArrowRight className="w-4 h-4" />
-      </div>
-    </div>
-  );
-}
