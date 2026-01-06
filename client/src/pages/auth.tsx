@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as React from "react";
 import { useLocation } from "wouter";
-import { AnimatedLynx } from "@/components/AnimatedLynx";
+import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -85,7 +85,7 @@ export default function AuthPage() {
         className="w-full max-w-md relative z-10"
       >
         <div className="flex flex-col items-center gap-4 mb-8 justify-center">
-          <AnimatedLynx size={64} />
+          <img src={logo} alt="LynxIQ Logo" className="w-20 h-20 object-contain" />
           <span className="font-display font-bold text-3xl tracking-tight">LynxIQ</span>
         </div>
 

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { AnimatedLynx } from "@/components/AnimatedLynx";
+import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,7 +33,7 @@ export default function Home() {
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <AnimatedLynx size={44} />
+            <img src={logo} alt="LynxIQ Logo" className="w-12 h-12 object-contain" />
             <span className="font-display font-bold text-2xl tracking-tight">LynxIQ</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
@@ -259,7 +259,7 @@ export default function Home() {
       <footer className="border-t border-border/40 py-12 bg-muted/20">
         <div className="container mx-auto px-6 text-center text-muted-foreground">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <AnimatedLynx size={32} />
+            <img src={logo} alt="LynxIQ Logo" className="w-8 h-8 object-contain" />
             <span className="font-bold text-lg text-foreground">LynxIQ Knowledge Base</span>
           </div>
           <div className="flex justify-center gap-8 mb-8 text-sm">
