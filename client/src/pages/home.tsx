@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { 
   ArrowRight, 
   CheckCircle2, 
