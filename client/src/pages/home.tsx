@@ -1,8 +1,11 @@
 import { Link, useLocation } from "wouter";
+import { useState, useEffect } from "react";
+import { SplashScreen } from "@/components/SplashScreen";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { AnimatePresence } from "framer-motion";
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -28,26 +31,32 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const [showSplash, setShowSplash] = useState(true);
 
   return (
-    <div className="min-h-screen bg-background font-sans selection:bg-primary/20">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
-        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="LynxIQ Logo" className="w-12 h-12 object-contain" />
-            <span className="font-display font-bold text-2xl tracking-tight">LynxIQ</span>
+    <>
+      <AnimatePresence>
+        {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+      </AnimatePresence>
+
+      <div className={`min-h-screen bg-background font-sans selection:bg-primary/20 transition-opacity duration-1000 ${showSplash ? 'opacity-0' : 'opacity-100'}`}>
+        {/* Navigation */}
+        <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
+          <div className="container mx-auto px-6 h-24 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src={logo} alt="LynxIQ Logo" className="w-16 h-16 object-contain" />
+              <span className="font-display font-bold text-3xl tracking-tight">LynxIQ</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+              <a href="#knowledge" className="hover:text-foreground transition-colors">Knowledge Base</a>
+              <a href="#community" className="hover:text-foreground transition-colors">Community</a>
+              <a href="#" className="hover:text-foreground transition-colors">Pricing</a>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => setLocation("/auth")}>Log in</Button>
+              <Button size="sm" className="rounded-full px-6 bg-primary shadow-lg shadow-primary/20" onClick={() => setLocation("/auth")}>Get Started</Button>
+            </div>
           </div>
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#knowledge" className="hover:text-foreground transition-colors">Knowledge Base</a>
-            <a href="#community" className="hover:text-foreground transition-colors">Community</a>
-            <a href="#" className="hover:text-foreground transition-colors">Pricing</a>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => setLocation("/auth")}>Log in</Button>
-            <Button size="sm" className="rounded-full px-6 bg-primary shadow-lg shadow-primary/20" onClick={() => setLocation("/auth")}>Get Started</Button>
-          </div>
-        </div>
       </nav>
 
       <main className="pt-28 pb-20">

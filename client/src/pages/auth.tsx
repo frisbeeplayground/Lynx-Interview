@@ -84,9 +84,9 @@ export default function AuthPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="flex flex-col items-center gap-4 mb-8 justify-center">
-          <img src={logo} alt="LynxIQ Logo" className="w-20 h-20 object-contain" />
-          <span className="font-display font-bold text-3xl tracking-tight">LynxIQ</span>
+        <div className="flex flex-col items-center gap-6 mb-10 justify-center">
+          <img src={logo} alt="LynxIQ Logo" className="w-32 h-32 object-contain shadow-xl rounded-2xl" />
+          <span className="font-display font-bold text-4xl tracking-tight">LynxIQ</span>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-8">
