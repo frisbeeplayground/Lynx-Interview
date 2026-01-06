@@ -1,6 +1,7 @@
 import { useState } from "react";
 import * as React from "react";
 import { useLocation } from "wouter";
+import { AnimatedLynx } from "@/components/AnimatedLynx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -9,31 +10,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ChevronRight, Briefcase, Target, Code2, Sparkles, Languages, Calculator, BrainCircuit, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 
-// Simple fallback Tabs for debugging
 const SimpleTabs = ({ children, defaultValue }: { children: React.ReactNode, defaultValue: string }) => {
   const [active, setActive] = useState(defaultValue);
   return (
     <div className="w-full">
       <div className="flex bg-muted p-1 rounded-lg mb-6">
         {React.Children.map(children, (child: any) => {
-          if (child.type === TabsList) {
+          if (child && child.type === TabsList) {
             return React.Children.map(child.props.children, (trigger: any) => (
-              <button
-                className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${active === trigger.props.value ? 'bg-background shadow text-foreground' : 'text-muted-foreground'}`}
-                onClick={() => setActive(trigger.props.value)}
-              >
-                {trigger.props.children}
-              </button>
+              trigger && (
+                <button
+                  key={trigger.props.value}
+                  className={`flex-1 py-1 text-sm font-medium rounded-md transition-all ${active === trigger.props.value ? 'bg-background shadow text-foreground' : 'text-muted-foreground'}`}
+                  onClick={() => setActive(trigger.props.value)}
+                >
+                  {trigger.props.children}
+                </button>
+              )
             ));
           }
+          return null;
         })}
       </div>
       {React.Children.map(children, (child: any) => {
-        if (child.type === TabsContent && child.props.value === active) {
+        if (child && child.type === TabsContent && child.props.value === active) {
           return child.props.children;
         }
+        return null;
       })}
     </div>
   );
@@ -41,15 +45,14 @@ const SimpleTabs = ({ children, defaultValue }: { children: React.ReactNode, def
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
-  const [step, setStep] = useState("auth"); // auth, profile, skills, goals
-  const [profile, setProfile] = useState(""); // engineer, accountant, ba, etc
+  const [step, setStep] = useState("auth");
+  const [profile, setProfile] = useState("");
 
   const nextStep = () => {
     if (step === "auth") setStep("profile");
     else if (step === "profile") setStep("skills");
     else if (step === "skills") setStep("goals");
     else {
-      // Pass the profile to the dashboard via state or simple storage
       localStorage.setItem("user_profile", profile);
       setLocation("/dashboard");
     }
@@ -81,12 +84,11 @@ export default function AuthPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="flex items-center gap-2 mb-8 justify-center">
-          <img src={logo} alt="LynxIQ Logo" className="w-10 h-10 object-contain" />
-          <span className="font-display font-bold text-2xl tracking-tight">LynxIQ</span>
+        <div className="flex flex-col items-center gap-4 mb-8 justify-center">
+          <AnimatedLynx size={64} />
+          <span className="font-display font-bold text-3xl tracking-tight">LynxIQ</span>
         </div>
 
-        {/* Brand Stats */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-4 text-center relative overflow-hidden group">
             <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse"></div>
@@ -120,7 +122,6 @@ export default function AuthPage() {
                       <CardDescription>Enter your credentials to continue your preparation.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Colorful Social Logins */}
                       <div className="grid grid-cols-3 gap-3 mb-2">
                         <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-red-500/50 hover:bg-red-500/5 transition-colors group">
                           <svg className="w-5 h-5 text-[#DB4437] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
@@ -170,7 +171,6 @@ export default function AuthPage() {
                       <CardDescription>Join 2,000+ candidates mastering their interviews.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Colorful Social Signups */}
                       <div className="grid grid-cols-3 gap-3 mb-2">
                         <Button variant="outline" className="rounded-xl h-10 px-0 hover:border-red-500/50 hover:bg-red-500/5 transition-colors group">
                           <svg className="w-5 h-5 text-[#DB4437] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
