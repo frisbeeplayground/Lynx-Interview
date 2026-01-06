@@ -20,7 +20,9 @@ import {
   BrainCircuit,
   Trophy,
   Star,
-  Calendar
+  Calendar,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -180,75 +182,96 @@ export default function Home() {
         </section>
 
         {/* Community, Competitions & Courses */}
-        <section id="community" className="container mx-auto px-6 py-24">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12">
-            
-            {/* Left Column: Testimonials & Stats */}
-            <div className="lg:col-span-4 space-y-8">
-              <h2 className="text-3xl font-display font-bold mb-8">What Our Members Say</h2>
-              <Testimonial 
-                quote="LynxIQ helped me pivot from traditional accounting to AI-driven financial strategy in just 3 months. The personalized track was a game changer."
-                author="Sarah Jenkins"
-                role="Financial Controller"
-              />
-              <Testimonial 
-                quote="The AI coding simulations are eerily realistic. It prepared me for my senior engineer interview at OpenAI like nothing else."
-                author="Marcus Chen"
-                role="Senior Dev"
-              />
-              <div className="bg-primary/5 rounded-2xl p-8 border border-primary/10">
-                <div className="text-4xl font-display font-bold text-primary mb-2">94%</div>
-                <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Success Rate in Upskilling</p>
+        <section id="community" className="container mx-auto px-6 py-24 space-y-24 overflow-hidden">
+          {/* Testimonials Banner */}
+          <div>
+            <div className="flex items-center justify-between mb-8 max-w-7xl mx-auto">
+              <h2 className="text-3xl font-display font-bold">Member Stories</h2>
+              <div className="flex gap-2">
+                <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center cursor-pointer hover:bg-muted transition-colors"><ChevronLeft className="w-4 h-4" /></div>
+                <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center cursor-pointer hover:bg-muted transition-colors"><ChevronRight className="w-4 h-4" /></div>
               </div>
             </div>
-
-            {/* Right Column: Events & Courses */}
-            <div className="lg:col-span-8 space-y-12">
-              <div>
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-display font-bold flex items-center gap-3">
-                    <Trophy className="w-8 h-8 text-orange-500" />
-                    Upcoming Competitions
-                  </h2>
-                  <Button variant="ghost" className="text-primary font-bold">View All</Button>
+            <div className="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar -mx-6 px-6">
+              {[
+                { quote: "LynxIQ helped me pivot from traditional accounting to AI-driven financial strategy in just 3 months. The personalized track was a game changer.", author: "Sarah Jenkins", role: "Financial Controller" },
+                { quote: "The AI coding simulations are eerily realistic. It prepared me for my senior engineer interview at OpenAI like nothing else.", author: "Marcus Chen", role: "Senior Dev" },
+                { quote: "Finally a platform that understands the BA mindset. The AI data modeling module is exceptional.", author: "Elena Rodriguez", role: "Business Analyst" },
+                { quote: "Learning German with the AI partner felt like talking to a native friend. Reached B2 faster than expected.", author: "Lukas Weber", role: "Product Manager" },
+                { quote: "The finance modules are incredibly deep. It's not just basic AI, it's real industry application.", author: "James Wilson", role: "Tax Consultant" }
+              ].map((t, i) => (
+                <div key={i} className="min-w-[400px] snap-center">
+                  <Testimonial {...t} />
                 </div>
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <EventCard 
-                    title="AI Prompt Engineering Hackathon"
-                    date="Oct 15, 2024"
-                    prize="$5,000 Prize Pool"
-                    participants="450 Joined"
-                  />
-                  <EventCard 
-                    title="Universal Data Analysis Challenge"
-                    date="Nov 2, 2024"
-                    prize="Lynx Pro Annual Subs"
-                    participants="1.2k Joined"
-                  />
+              ))}
+            </div>
+          </div>
+
+          {/* Events & Masterclasses Banner */}
+          <div className="bg-primary/5 rounded-[2rem] p-12 border border-primary/10">
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <h2 className="text-4xl font-display font-bold mb-2">Happening Soon</h2>
+                <p className="text-muted-foreground">Join exclusive competitions and expert-led sessions.</p>
+              </div>
+              <Button className="rounded-full px-8">View Full Calendar</Button>
+            </div>
+            
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x no-scrollbar">
+              <div className="min-w-[450px] snap-center">
+                <div className="bg-white border border-border/50 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all h-full flex flex-col justify-between">
+                  <div>
+                    <Badge className="bg-orange-500/10 text-orange-600 border-none mb-4 uppercase text-[10px] tracking-widest font-bold">Competition</Badge>
+                    <h3 className="text-2xl font-bold mb-4">AI Prompt Engineering Hackathon</h3>
+                    <div className="flex items-center gap-4 text-emerald-600 font-bold mb-6">
+                      <Trophy className="w-5 h-5" />
+                      $5,000 Prize Pool
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-muted-foreground text-sm font-medium">
+                      <Calendar className="w-4 h-4" />
+                      Oct 15, 2024
+                    </div>
+                    <Button variant="outline" className="rounded-xl px-6">Register Now</Button>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-display font-bold flex items-center gap-3">
-                    <Calendar className="w-8 h-8 text-primary" />
-                    Upcoming Masterclasses
-                  </h2>
-                  <Button variant="ghost" className="text-primary font-bold">View Calendar</Button>
+              <div className="min-w-[450px] snap-center">
+                <div className="bg-white border border-border/50 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all h-full flex flex-col justify-between">
+                  <div>
+                    <Badge className="bg-primary/10 text-primary border-none mb-4 uppercase text-[10px] tracking-widest font-bold">Masterclass</Badge>
+                    <h3 className="text-2xl font-bold mb-4">Mastering LLM Fine-Tuning</h3>
+                    <p className="text-muted-foreground text-sm mb-6">Expert-led deep dive into custom model development with Dr. Elena Rossi.</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-muted-foreground text-sm font-medium">
+                      <Calendar className="w-4 h-4" />
+                      Oct 20, 2024
+                    </div>
+                    <Button variant="outline" className="rounded-xl px-6">Join Session</Button>
+                  </div>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <CoursePreview 
-                    title="Mastering LLM Fine-Tuning"
-                    instructor="Dr. Elena Rossi"
-                    date="Starts Oct 20"
-                    tag="Advanced"
-                  />
-                  <CoursePreview 
-                    title="AI-Agentic Workflows for BAs"
-                    instructor="David Thorne"
-                    date="Starts Nov 5"
-                    tag="Intermediate"
-                  />
+              </div>
+
+              <div className="min-w-[450px] snap-center">
+                <div className="bg-white border border-border/50 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all h-full flex flex-col justify-between">
+                  <div>
+                    <Badge className="bg-emerald-500/10 text-emerald-600 border-none mb-4 uppercase text-[10px] tracking-widest font-bold">Challenge</Badge>
+                    <h3 className="text-2xl font-bold mb-4">Universal Data Analysis Challenge</h3>
+                    <div className="flex items-center gap-4 text-primary font-bold mb-6">
+                      <Sparkles className="w-5 h-5" />
+                      Lynx Pro Annual Subs
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-muted-foreground text-sm font-medium">
+                      <Calendar className="w-4 h-4" />
+                      Nov 2, 2024
+                    </div>
+                    <Button variant="outline" className="rounded-xl px-6">Enter Challenge</Button>
+                  </div>
                 </div>
               </div>
             </div>
