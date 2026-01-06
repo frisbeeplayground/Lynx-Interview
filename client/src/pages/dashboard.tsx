@@ -1,5 +1,4 @@
-import { useState } from "react";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -18,29 +17,89 @@ import {
   Code2,
   Languages,
   ArrowUpRight,
-  Filter,
   Calculator,
   BrainCircuit,
   Sparkles
 } from "lucide-react";
-import { motion } from "framer-motion";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
+  const [userProfile, setUserProfile] = useState("software");
 
-  const courses = [
-    { title: "AI Coding Assistant Pro", category: "DevTools", progress: 65, icon: <Code2 className="w-4 h-4 text-blue-500" /> },
-    { title: "Advanced Accounting w/ AI", category: "Finance", progress: 20, icon: <Calculator className="w-4 h-4 text-orange-500" /> },
-    { title: "Conversational German", category: "Language", progress: 80, icon: <Languages className="w-4 h-4 text-purple-500" /> },
-    { title: "AI-Driven BA Analysis", category: "Business", progress: 45, icon: <BrainCircuit className="w-4 h-4 text-emerald-500" /> }
-  ];
+  useEffect(() => {
+    const saved = localStorage.getItem("user_profile");
+    if (saved) setUserProfile(saved);
+  }, []);
 
-  const news = [
-    { title: "Cursor.sh launches new Composer features", date: "2h ago", category: "Tech" },
-    { title: "Mastering Financial Forecasting with GPT-4o", date: "5h ago", category: "Blog" },
-    { title: "New Module: Technical English for PMs", date: "1d ago", category: "Upskill" }
-  ];
+  const profileContent: Record<string, any> = {
+    software: {
+      welcome: "Code better, John! 🚀",
+      desc: "Your AI-assisted development tracks are updated.",
+      courses: [
+        { title: "AI Coding Assistant Pro", category: "DevTools", progress: 65, icon: <Code2 className="w-4 h-4 text-blue-500" /> },
+        { title: "System Design for Scale", category: "Architecture", progress: 40, icon: <Briefcase className="w-4 h-4 text-slate-500" /> }
+      ],
+      news: [
+        { title: "Cursor.sh launches new Composer features", date: "2h ago", category: "Tech" },
+        { title: "React 19 Server Components Deep Dive", date: "5h ago", category: "Dev" }
+      ],
+      jobs: [
+        { company: "OpenAI", role: "Software Engineer", location: "SF" },
+        { company: "Stripe", role: "Frontend Lead", location: "Remote" }
+      ]
+    },
+    accountant: {
+      welcome: "Number crunching evolved, John! 📊",
+      desc: "Master AI-driven financial modeling.",
+      courses: [
+        { title: "Advanced Accounting w/ AI", category: "Finance", progress: 20, icon: <Calculator className="w-4 h-4 text-orange-500" /> },
+        { title: "Tax Law Automation", category: "Legal", progress: 10, icon: <BookOpen className="w-4 h-4 text-red-500" /> }
+      ],
+      news: [
+        { title: "AI Agents for Bookkeeping: A 2024 Guide", date: "3h ago", category: "Finance" },
+        { title: "New IFRS Standards with AI Auditing", date: "6h ago", category: "Report" }
+      ],
+      jobs: [
+        { company: "PwC", role: "Senior AI Auditor", location: "London" },
+        { company: "Deloitte", role: "Tax Strategist", location: "Remote" }
+      ]
+    },
+    ba: {
+      welcome: "Analyze deeper, John! 📈",
+      desc: "Bridge business and AI seamlessly.",
+      courses: [
+        { title: "AI-Driven BA Analysis", category: "Business", progress: 45, icon: <BrainCircuit className="w-4 h-4 text-emerald-500" /> },
+        { title: "Agile AI Product Mgmt", category: "Strategy", progress: 30, icon: <TrendingUp className="w-4 h-4 text-blue-500" /> }
+      ],
+      news: [
+        { title: "How BA roles are evolving with GenAI", date: "1h ago", category: "Strategy" },
+        { title: "User Story Automation in 2024", date: "4h ago", category: "Agile" }
+      ],
+      jobs: [
+        { company: "Atlassian", role: "Senior BA", location: "Remote" },
+        { company: "Salesforce", role: "Strategy Consultant", location: "SF" }
+      ]
+    },
+    linguist: {
+      welcome: "Language mastery, John! 🌍",
+      desc: "Your AI language partner is waiting.",
+      courses: [
+        { title: "Conversational German B2", category: "Language", progress: 80, icon: <Languages className="w-4 h-4 text-purple-500" /> },
+        { title: "Medical Spanish Pro", category: "Specifics", progress: 15, icon: <MessageSquare className="w-4 h-4 text-rose-500" /> }
+      ],
+      news: [
+        { title: "Duolingo integrates advanced AI voices", date: "2h ago", category: "Apps" },
+        { title: "Best AI Tutors for C1 Fluency", date: "5h ago", category: "Guide" }
+      ],
+      jobs: [
+        { company: "Babbel", role: "Linguistic Designer", location: "Berlin" },
+        { company: "Coursera", role: "Content Specialist", location: "Remote" }
+      ]
+    }
+  };
+
+  const current = profileContent[userProfile] || profileContent.software;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -54,7 +113,7 @@ export default function Dashboard() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input 
               type="text" 
-              placeholder="Learn something new..." 
+              placeholder={`Search ${userProfile} topics...`}
               className="pl-9 pr-4 py-2 bg-muted/50 rounded-full text-sm border-none focus:ring-2 ring-primary/20 w-64 transition-all"
             />
           </div>
@@ -68,11 +127,11 @@ export default function Dashboard() {
         <div className="xl:col-span-8 space-y-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-display font-bold tracking-tight">Expand your horizon, John! 🚀</h1>
-              <p className="text-muted-foreground mt-1 text-lg">Your universal upskilling dashboard is ready.</p>
+              <h1 className="text-3xl font-display font-bold tracking-tight">{current.welcome}</h1>
+              <p className="text-muted-foreground mt-1 text-lg">{current.desc}</p>
             </div>
             <div className="flex gap-2">
-              <Button size="sm" className="rounded-xl bg-primary shadow-lg shadow-primary/20"><Sparkles className="w-4 h-4 mr-2" /> AI Tutor Chat</Button>
+              <Button size="sm" className="rounded-xl bg-primary shadow-lg shadow-primary/20"><Sparkles className="w-4 h-4 mr-2" /> AI {userProfile === 'linguist' ? 'Tutor' : 'Expert'} Chat</Button>
             </div>
           </div>
 
@@ -81,7 +140,7 @@ export default function Dashboard() {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 text-white/80 mb-2">
                   <Flame className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Growth Streak</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">Mastery Streak</span>
                 </div>
                 <div className="text-3xl font-bold font-display">12 Days</div>
               </CardContent>
@@ -90,26 +149,26 @@ export default function Dashboard() {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <BookOpen className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Skills Mastered</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">Active Tracks</span>
                 </div>
-                <div className="text-3xl font-bold font-display">18</div>
+                <div className="text-3xl font-bold font-display">4</div>
               </CardContent>
             </Card>
             <Card className="border-border/50 bg-white">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                  <Sparkles className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">AI Proficiency</span>
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">Profile Level</span>
                 </div>
-                <div className="text-3xl font-bold font-display text-primary">Advanced</div>
+                <div className="text-3xl font-bold font-display text-primary uppercase">Expert</div>
               </CardContent>
             </Card>
           </div>
 
           <div className="space-y-6">
-            <h2 className="text-xl font-bold font-display">In-Progress Tracks</h2>
+            <h2 className="text-xl font-bold font-display">Your Personalized Path</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {courses.map((course, i) => (
+              {current.courses.map((course: any, i: number) => (
                 <Card key={i} className="group border-border/50 hover:border-primary/50 transition-all bg-white overflow-hidden">
                   <CardContent className="p-5">
                     <div className="flex items-center gap-3 mb-4">
@@ -140,11 +199,11 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-primary" />
-                Trending in AI
+                Latest for {userProfile}s
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {news.map((n, i) => (
+              {current.news.map((n: any, i: number) => (
                 <div key={i} className="flex gap-4 items-start pb-4 last:pb-0 last:border-0 border-b border-border/50">
                   <div className="bg-muted p-2 rounded-lg min-w-[60px] text-center">
                     <span className="text-[10px] font-bold block text-muted-foreground uppercase">{n.category}</span>
@@ -158,10 +217,30 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-primary to-violet-600 text-white border-none p-6 rounded-2xl">
-            <h3 className="font-display font-bold text-xl mb-2">New: Learn Accounting using AI</h3>
-            <p className="text-white/80 text-sm mb-4">Master bookkeeping and financial forecasting using advanced AI agents. 40% complete.</p>
-            <Button variant="secondary" className="w-full font-bold">Continue Module</Button>
+          <Card className="border-border/50 bg-white">
+             <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-emerald-500" />
+                  Upcoming Roles
+                </CardTitle>
+             </CardHeader>
+             <CardContent className="p-0">
+               <div className="divide-y divide-border/50">
+                {current.jobs.map((job: any, i: number) => (
+                  <div key={i} className="p-4 hover:bg-muted/30 transition-colors cursor-pointer group">
+                    <div className="flex justify-between items-start mb-1">
+                      <h4 className="font-bold text-sm">{job.role}</h4>
+                      <ArrowUpRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="font-medium text-primary">{job.company}</span>
+                      <span>•</span>
+                      <span>{job.location}</span>
+                    </div>
+                  </div>
+                ))}
+               </div>
+             </CardContent>
           </Card>
         </div>
       </main>

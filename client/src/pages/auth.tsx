@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, ChevronRight, Briefcase, Target, GraduationCap, Code2, Sparkles, Cat } from "lucide-react";
+import { ArrowRight, ChevronRight, Briefcase, Target, Code2, Sparkles, Languages, Calculator, BrainCircuit, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 
@@ -41,23 +41,36 @@ const SimpleTabs = ({ children, defaultValue }: { children: React.ReactNode, def
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
-  const [step, setStep] = useState("auth"); // auth, skills, experience, goals
-  const [formData, setFormData] = useState({
-    skills: [],
-    experience: "",
-    targetCompanies: [],
-  });
+  const [step, setStep] = useState("auth"); // auth, profile, skills, goals
+  const [profile, setProfile] = useState(""); // engineer, accountant, ba, etc
 
   const nextStep = () => {
-    if (step === "auth") setStep("skills");
-    else if (step === "skills") setStep("experience");
-    else if (step === "experience") setStep("goals");
-    else setLocation("/dashboard");
+    if (step === "auth") setStep("profile");
+    else if (step === "profile") setStep("skills");
+    else if (step === "skills") setStep("goals");
+    else {
+      // Pass the profile to the dashboard via state or simple storage
+      localStorage.setItem("user_profile", profile);
+      setLocation("/dashboard");
+    }
+  };
+
+  const profiles = [
+    { id: "software", label: "Software Engineer", icon: <Code2 className="w-5 h-5" />, color: "text-blue-500", bg: "bg-blue-500/10" },
+    { id: "accountant", label: "Accountant", icon: <Calculator className="w-5 h-5" />, color: "text-orange-500", bg: "bg-orange-500/10" },
+    { id: "ba", label: "Business Analyst", icon: <BrainCircuit className="w-5 h-5" />, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+    { id: "linguist", label: "Language Learner", icon: <Languages className="w-5 h-5" />, color: "text-purple-500", bg: "bg-purple-500/10" }
+  ];
+
+  const skillSets: Record<string, string[]> = {
+    software: ["React", "Node.js", "Python", "System Design", "AWS", "TypeScript", "AI Coding"],
+    accountant: ["Tax Law", "Bookkeeping", "Excel AI", "Financial Auditing", "IFRS", "GAAP"],
+    ba: ["Agile", "UML", "Jira", "SQL", "Stakeholder Mgmt", "AI Data Modeling"],
+    linguist: ["Pronunciation", "Grammar", "Vocabulary", "Cultural Context", "Business English"]
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20 overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/20 blur-[120px] rounded-full"></div>
@@ -204,6 +217,43 @@ export default function AuthPage() {
             </motion.div>
           )}
 
+          {step === "profile" && (
+            <motion.div
+              key="profile"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="text-center mb-8">
+                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-primary">
+                  <User className="w-6 h-6" />
+                </div>
+                <h2 className="text-2xl font-display font-bold">What's your focus?</h2>
+                <p className="text-muted-foreground">We'll tailor your entire knowledge base.</p>
+              </div>
+
+              <div className="grid gap-3">
+                {profiles.map((p) => (
+                  <div 
+                    key={p.id}
+                    className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-4 group ${profile === p.id ? 'border-primary bg-primary/5' : 'border-border/50 bg-card hover:border-primary/50'}`}
+                    onClick={() => {
+                      setProfile(p.id);
+                      setTimeout(nextStep, 300);
+                    }}
+                  >
+                    <div className={`w-10 h-10 rounded-lg ${p.bg} ${p.color} flex items-center justify-center`}>
+                      {p.icon}
+                    </div>
+                    <div className="font-bold flex-1">{p.label}</div>
+                    <ChevronRight className={`w-4 h-4 transition-opacity ${profile === p.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {step === "skills" && (
             <motion.div
               key="skills"
@@ -214,14 +264,14 @@ export default function AuthPage() {
             >
               <div className="text-center mb-8">
                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-primary">
-                  <Code2 className="w-6 h-6" />
+                  {profiles.find(p => p.id === profile)?.icon || <Code2 className="w-6 h-6" />}
                 </div>
-                <h2 className="text-2xl font-display font-bold">What are your top skills?</h2>
-                <p className="text-muted-foreground">This helps us tailor technical questions for you.</p>
+                <h2 className="text-2xl font-display font-bold">Refine your skills</h2>
+                <p className="text-muted-foreground">Choose what you want to master first.</p>
               </div>
               
               <div className="flex flex-wrap gap-2 justify-center mb-8">
-                {["React", "Node.js", "Python", "System Design", "AWS", "TypeScript", "Algorithms", "Kubernetes", "SQL", "Go"].map((skill) => (
+                {(skillSets[profile] || skillSets.software).map((skill) => (
                   <Badge 
                     key={skill} 
                     variant="outline" 
@@ -240,45 +290,6 @@ export default function AuthPage() {
             </motion.div>
           )}
 
-          {step === "experience" && (
-            <motion.div
-              key="experience"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="text-center mb-8">
-                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-primary">
-                  <Briefcase className="w-6 h-6" />
-                </div>
-                <h2 className="text-2xl font-display font-bold">Your experience level?</h2>
-                <p className="text-muted-foreground">We adjust interviewer difficulty based on your seniority.</p>
-              </div>
-
-              <div className="space-y-3">
-                {[
-                  { id: "junior", label: "Junior / Entry Level", desc: "0-2 years experience" },
-                  { id: "mid", label: "Mid-Level", desc: "3-5 years experience" },
-                  { id: "senior", label: "Senior", desc: "5-8 years experience" },
-                  { id: "staff", label: "Staff / Principal", desc: "8+ years experience" },
-                ].map((level) => (
-                  <div 
-                    key={level.id}
-                    className="p-4 rounded-xl border border-border/50 bg-card hover:border-primary/50 cursor-pointer transition-all flex items-center justify-between group"
-                    onClick={nextStep}
-                  >
-                    <div>
-                      <div className="font-bold">{level.label}</div>
-                      <div className="text-xs text-muted-foreground">{level.desc}</div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
           {step === "goals" && (
             <motion.div
               key="goals"
@@ -291,19 +302,22 @@ export default function AuthPage() {
                 <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-primary">
                   <Target className="w-6 h-6" />
                 </div>
-                <h2 className="text-2xl font-display font-bold">Target Companies?</h2>
-                <p className="text-muted-foreground">We'll use company-specific question banks.</p>
+                <h2 className="text-2xl font-display font-bold">Target Milestones?</h2>
+                <p className="text-muted-foreground">We'll use profile-specific goal banks.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 mb-8">
-                {["Google", "Meta", "Amazon", "OpenAI", "Stripe", "Netflix", "Uber", "Airbnb"].map((company) => (
-                  <div 
-                    key={company}
-                    className="p-3 rounded-xl border border-border/50 bg-card text-center font-semibold hover:border-primary/50 cursor-pointer transition-all"
-                    onClick={(e) => e.currentTarget.classList.toggle('border-primary')}
-                  >
-                    {company}
-                  </div>
+                {profile === "software" && ["Google", "Meta", "OpenAI", "Stripe"].map((g) => (
+                  <div key={g} className="p-3 rounded-xl border border-border/50 bg-card text-center font-semibold hover:border-primary/50 cursor-pointer transition-all" onClick={(e) => e.currentTarget.classList.toggle('border-primary')}>{g}</div>
+                ))}
+                {profile === "accountant" && ["Big 4", "CPA Cert", "AI Auditor", "Tax Pro"].map((g) => (
+                  <div key={g} className="p-3 rounded-xl border border-border/50 bg-card text-center font-semibold hover:border-primary/50 cursor-pointer transition-all" onClick={(e) => e.currentTarget.classList.toggle('border-primary')}>{g}</div>
+                ))}
+                {profile === "ba" && ["IIBA Cert", "Agile Coach", "Strategy Lead", "Product Owner"].map((g) => (
+                  <div key={g} className="p-3 rounded-xl border border-border/50 bg-card text-center font-semibold hover:border-primary/50 cursor-pointer transition-all" onClick={(e) => e.currentTarget.classList.toggle('border-primary')}>{g}</div>
+                ))}
+                {profile === "linguist" && ["B2 Exam", "C1 Fluency", "Translator", "Native Coach"].map((g) => (
+                  <div key={g} className="p-3 rounded-xl border border-border/50 bg-card text-center font-semibold hover:border-primary/50 cursor-pointer transition-all" onClick={(e) => e.currentTarget.classList.toggle('border-primary')}>{g}</div>
                 ))}
               </div>
 
@@ -316,7 +330,7 @@ export default function AuthPage() {
         </AnimatePresence>
 
         <div className="mt-8 flex justify-center gap-1">
-          {["auth", "skills", "experience", "goals"].map((s, i) => (
+          {["auth", "profile", "skills", "goals"].map((s, i) => (
             <div 
               key={s} 
               className={`h-1.5 rounded-full transition-all duration-300 ${step === s ? 'w-8 bg-primary' : 'w-2 bg-muted'}`}
