@@ -92,12 +92,12 @@ export default function IDEPage() {
     setTimeout(() => setShowAutocomplete(true), 2000);
   };
 
-  const bgColor = theme === "dark" ? "bg-[#0d0d0d]" : "bg-white";
-  const textColor = theme === "dark" ? "text-gray-300" : "text-gray-700";
-  const headerColor = theme === "dark" ? "bg-[#141414]" : "bg-gray-50";
-  const borderColor = theme === "dark" ? "border-white/10" : "border-gray-200";
-  const sidebarColor = theme === "dark" ? "bg-[#111]" : "bg-gray-50";
-  const editorColor = theme === "dark" ? "bg-[#1e1e1e]" : "bg-white";
+  const bgColor = theme === "dark" ? "bg-[#0f111a]" : "bg-[#f8f9fc]";
+  const textColor = theme === "dark" ? "text-slate-300" : "text-slate-700";
+  const headerColor = theme === "dark" ? "bg-[#161b22]" : "bg-white";
+  const borderColor = theme === "dark" ? "border-white/5" : "border-slate-200";
+  const sidebarColor = theme === "dark" ? "bg-[#0f111a]" : "bg-[#f1f5f9]";
+  const editorColor = theme === "dark" ? "bg-[#13151f]" : "bg-white";
 
   return (
     <div className={`h-screen w-full flex flex-col font-mono overflow-hidden transition-colors duration-300 ${bgColor} ${textColor}`}>
