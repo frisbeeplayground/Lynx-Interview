@@ -19,7 +19,8 @@ import {
   ArrowUpRight,
   Calculator,
   BrainCircuit,
-  Sparkles
+  Sparkles,
+  CheckCircle2
 } from "lucide-react";
 import logo from "@assets/generated_images/minimalist_geometric_logo_for_lynxiq_interview_prep_app.png";
 
@@ -163,6 +164,82 @@ export default function Dashboard() {
                 <div className="text-3xl font-bold font-display text-primary uppercase">Expert</div>
               </CardContent>
             </Card>
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold font-display">Coding Challenges</h2>
+              <div className="flex gap-2">
+                <Badge variant="outline" className="cursor-pointer bg-primary/10 text-primary border-primary/20">All</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Pending</Badge>
+                <Badge variant="outline" className="cursor-pointer hover:bg-muted">Solved</Badge>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <Card className="hover:border-primary/50 cursor-pointer transition-all group" onClick={() => setLocation("/coding")}>
+                <CardContent className="p-5 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 font-bold">
+                      <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Two Sum</h3>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <Badge variant="secondary" className="text-[10px] h-5 bg-emerald-500/10 text-emerald-600 border-emerald-200">Easy</Badge>
+                        <span>Arrays</span>
+                        <span>15 mins</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    Review Solution <ArrowUpRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:border-primary/50 cursor-pointer transition-all group border-l-4 border-l-primary" onClick={() => setLocation("/coding")}>
+                <CardContent className="p-5 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
+                      <Code2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm mb-1 group-hover:text-primary transition-colors">LRU Cache Implementation</h3>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <Badge variant="secondary" className="text-[10px] h-5 bg-orange-500/10 text-orange-600 border-orange-200">Medium</Badge>
+                        <span>System Design</span>
+                        <span>45 mins</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button size="sm" className="bg-primary shadow-lg shadow-primary/20">
+                    Solve Now <ArrowUpRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:border-primary/50 cursor-pointer transition-all group opacity-75 hover:opacity-100">
+                <CardContent className="p-5 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground font-bold">
+                      <Clock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm mb-1 group-hover:text-primary transition-colors">Merge K Sorted Lists</h3>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <Badge variant="secondary" className="text-[10px] h-5 bg-red-500/10 text-red-600 border-red-200">Hard</Badge>
+                        <span>Heap</span>
+                        <span>60 mins</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    Start <ArrowUpRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           <div className="space-y-6">

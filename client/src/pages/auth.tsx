@@ -84,7 +84,7 @@ export default function AuthPage() {
       setIsLoading(true);
       setTimeout(() => {
         localStorage.setItem("user_profile", profile);
-        setLocation("/coding");
+        setLocation("/dashboard");
       }, 1000);
     }
   };
