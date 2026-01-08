@@ -32,7 +32,16 @@ import {
   Command,
   Braces,
   Zap,
-  Eye
+  Eye,
+  Crown,
+  Clock,
+  Database,
+  Shield,
+  Bug,
+  FileCheck,
+  Loader2,
+  TrendingUp,
+  Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,6 +77,10 @@ export default function IDEPage() {
   const [showDryRun, setShowDryRun] = useState(false);
   const [dryRunStep, setDryRunStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showAgentReview, setShowAgentReview] = useState(false);
+  const [reviewPhase, setReviewPhase] = useState<"idle" | "code-review" | "qa-review" | "complete">("idle");
+  const [codeReviewComplete, setCodeReviewComplete] = useState(false);
+  const [qaReviewComplete, setQaReviewComplete] = useState(false);
   
   const dryRunSteps = [
     {
@@ -156,6 +169,32 @@ export default function IDEPage() {
       return () => clearTimeout(timer);
     }
   }, [isPlaying, dryRunStep, showDryRun]);
+
+  // Agent review simulation
+  useEffect(() => {
+    if (showAgentReview && reviewPhase === "idle") {
+      setReviewPhase("code-review");
+      setCodeReviewComplete(false);
+      setQaReviewComplete(false);
+      
+      // Simulate code review taking 3 seconds
+      setTimeout(() => {
+        setCodeReviewComplete(true);
+        setReviewPhase("qa-review");
+        
+        // Simulate QA review taking 2.5 seconds
+        setTimeout(() => {
+          setQaReviewComplete(true);
+          setReviewPhase("complete");
+        }, 2500);
+      }, 3000);
+    }
+  }, [showAgentReview, reviewPhase]);
+
+  const startAgentReview = () => {
+    setShowAgentReview(true);
+    setReviewPhase("idle");
+  };
 
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hello! I'm your LynxAI pair programmer. I can help you with architecture, debugging, or explaining complex logic. What are we building today?" }
@@ -265,6 +304,17 @@ export default function IDEPage() {
           <Button size="sm" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white text-xs gap-2 rounded-md px-4 shadow-lg shadow-emerald-500/20">
             <Play className="w-3 h-3 fill-current" />
             Run Code
+          </Button>
+
+          <Button 
+            size="sm" 
+            className="h-8 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white text-xs gap-2 rounded-md px-4 shadow-lg shadow-amber-500/20"
+            onClick={startAgentReview}
+            data-testid="button-submit-review"
+          >
+            <Crown className="w-3 h-3" />
+            Submit for Review
+            <Badge className="ml-1 bg-white/20 text-white text-[8px] px-1 py-0 h-4 border-none">PRO</Badge>
           </Button>
         </div>
       </header>
@@ -784,6 +834,244 @@ export default function IDEPage() {
                     <SkipForward className="w-4 h-4" />
                   </Button>
                 </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Agent Review Modal - PRO Feature */}
+      <AnimatePresence>
+        {showAgentReview && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              transition={{ type: "spring", damping: 25 }}
+              className={`w-full max-w-4xl border rounded-3xl shadow-2xl overflow-hidden ${theme === "dark" ? "bg-[#0f111a] border-white/10" : "bg-white border-gray-200"}`}
+              data-testid="modal-agent-review"
+            >
+              {/* Header */}
+              <div className={`p-5 border-b flex items-center justify-between ${theme === "dark" ? "bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-white/5" : "bg-gradient-to-r from-amber-50 to-orange-50 border-gray-100"}`}>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                    <Crown className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className={`text-xl font-bold font-display ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                        AI Agent Review
+                      </h2>
+                      <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-none text-[10px]">PRO</Badge>
+                    </div>
+                    <p className={`text-xs mt-0.5 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                      Code Reviewer + QA Agent analyzing your solution
+                    </p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="icon" className="rounded-full" onClick={() => { setShowAgentReview(false); setReviewPhase("idle"); }}>
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Complexity Analysis Section */}
+                <div className={`p-5 rounded-2xl border ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Activity className="w-4 h-4 text-cyan-500" />
+                    <span className={`text-sm font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>Complexity Analysis</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Time Complexity */}
+                    <div className={`p-4 rounded-xl border ${theme === "dark" ? "bg-black/30 border-white/5" : "bg-white border-gray-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-emerald-500" />
+                          <span className={`text-xs font-bold uppercase tracking-wider ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Time Complexity</span>
+                        </div>
+                        <Badge className="bg-emerald-500/20 text-emerald-500 border-none text-sm font-mono font-bold">O(n)</Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={theme === "dark" ? "text-gray-500" : "text-gray-400"}>Best Case</span>
+                          <span className="text-emerald-500 font-mono">O(1)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={theme === "dark" ? "text-gray-500" : "text-gray-400"}>Average</span>
+                          <span className="text-emerald-500 font-mono">O(n)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={theme === "dark" ? "text-gray-500" : "text-gray-400"}>Worst Case</span>
+                          <span className="text-amber-500 font-mono">O(n)</span>
+                        </div>
+                      </div>
+                      {/* Visual Graph */}
+                      <div className="mt-4 h-16 flex items-end gap-1">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ height: 0 }}
+                            animate={{ height: `${i * 12}%` }}
+                            transition={{ delay: i * 0.1, duration: 0.5 }}
+                            className="flex-1 bg-gradient-to-t from-emerald-500/50 to-emerald-500 rounded-t"
+                          />
+                        ))}
+                      </div>
+                      <p className={`text-[10px] mt-2 text-center ${theme === "dark" ? "text-gray-600" : "text-gray-400"}`}>Linear growth with input size</p>
+                    </div>
+
+                    {/* Space Complexity */}
+                    <div className={`p-4 rounded-xl border ${theme === "dark" ? "bg-black/30 border-white/5" : "bg-white border-gray-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <Database className="w-4 h-4 text-violet-500" />
+                          <span className={`text-xs font-bold uppercase tracking-wider ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Space Complexity</span>
+                        </div>
+                        <Badge className="bg-violet-500/20 text-violet-500 border-none text-sm font-mono font-bold">O(n)</Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={theme === "dark" ? "text-gray-500" : "text-gray-400"}>HashMap Storage</span>
+                          <span className="text-violet-500 font-mono">O(n)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={theme === "dark" ? "text-gray-500" : "text-gray-400"}>Variables</span>
+                          <span className="text-emerald-500 font-mono">O(1)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className={theme === "dark" ? "text-gray-500" : "text-gray-400"}>Total</span>
+                          <span className="text-violet-500 font-mono">O(n)</span>
+                        </div>
+                      </div>
+                      {/* Visual Memory Blocks */}
+                      <div className="mt-4 flex gap-1 flex-wrap">
+                        {Array.from({ length: 12 }).map((_, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: i < 4 ? 1 : 0.3 }}
+                            transition={{ delay: i * 0.05 }}
+                            className={`w-6 h-6 rounded ${i < 4 ? "bg-gradient-to-br from-violet-500 to-indigo-500" : theme === "dark" ? "bg-white/5" : "bg-gray-100"}`}
+                          />
+                        ))}
+                      </div>
+                      <p className={`text-[10px] mt-2 text-center ${theme === "dark" ? "text-gray-600" : "text-gray-400"}`}>HashMap stores up to n elements</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Agent Review Panels */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Code Reviewer Agent */}
+                  <div className={`p-5 rounded-2xl border ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${codeReviewComplete ? "bg-emerald-500/20" : "bg-cyan-500/20"}`}>
+                        {reviewPhase === "code-review" && !codeReviewComplete ? (
+                          <Loader2 className="w-5 h-5 text-cyan-500 animate-spin" />
+                        ) : codeReviewComplete ? (
+                          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                        ) : (
+                          <FileCheck className="w-5 h-5 text-cyan-500" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className={`text-sm font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>Code Reviewer Agent</h3>
+                        <p className={`text-[10px] ${codeReviewComplete ? "text-emerald-500" : theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>
+                          {codeReviewComplete ? "Review Complete" : reviewPhase === "code-review" ? "Analyzing code quality..." : "Pending"}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {codeReviewComplete && (
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                        <div className={`p-3 rounded-lg ${theme === "dark" ? "bg-emerald-500/10" : "bg-emerald-50"}`}>
+                          <div className="flex items-center gap-2 text-emerald-500 text-xs font-bold mb-1">
+                            <CheckCircle2 className="w-3 h-3" /> Clean Code
+                          </div>
+                          <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Good use of HashMap for O(1) lookups</p>
+                        </div>
+                        <div className={`p-3 rounded-lg ${theme === "dark" ? "bg-amber-500/10" : "bg-amber-50"}`}>
+                          <div className="flex items-center gap-2 text-amber-500 text-xs font-bold mb-1">
+                            <AlertCircle className="w-3 h-3" /> Suggestion
+                          </div>
+                          <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Consider adding input validation for empty arrays</p>
+                        </div>
+                        <div className="flex items-center justify-between pt-2">
+                          <span className={`text-xs ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>Code Quality Score</span>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-24 h-2 rounded-full overflow-hidden ${theme === "dark" ? "bg-white/10" : "bg-gray-200"}`}>
+                              <motion.div initial={{ width: 0 }} animate={{ width: "92%" }} className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full" />
+                            </div>
+                            <span className="text-emerald-500 font-bold text-sm">92%</span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* QA Agent */}
+                  <div className={`p-5 rounded-2xl border ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${qaReviewComplete ? "bg-emerald-500/20" : "bg-rose-500/20"}`}>
+                        {reviewPhase === "qa-review" && !qaReviewComplete ? (
+                          <Loader2 className="w-5 h-5 text-rose-500 animate-spin" />
+                        ) : qaReviewComplete ? (
+                          <Shield className="w-5 h-5 text-emerald-500" />
+                        ) : (
+                          <Bug className="w-5 h-5 text-rose-500" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className={`text-sm font-bold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>QA Agent</h3>
+                        <p className={`text-[10px] ${qaReviewComplete ? "text-emerald-500" : reviewPhase === "qa-review" ? "text-rose-500" : theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>
+                          {qaReviewComplete ? "All Tests Passed" : reviewPhase === "qa-review" ? "Running test suites..." : "Waiting for Code Review"}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {qaReviewComplete && (
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                        <div className="space-y-2">
+                          {[
+                            { name: "Basic test cases", passed: true },
+                            { name: "Edge cases (empty array)", passed: true },
+                            { name: "Large input stress test", passed: true },
+                            { name: "Negative numbers", passed: true },
+                          ].map((test, i) => (
+                            <div key={i} className={`flex items-center justify-between px-3 py-2 rounded-lg ${theme === "dark" ? "bg-black/20" : "bg-white"}`}>
+                              <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{test.name}</span>
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex items-center justify-between pt-2">
+                          <span className={`text-xs ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>Test Coverage</span>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-24 h-2 rounded-full overflow-hidden ${theme === "dark" ? "bg-white/10" : "bg-gray-200"}`}>
+                              <motion.div initial={{ width: 0 }} animate={{ width: "100%" }} className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" />
+                            </div>
+                            <span className="text-emerald-500 font-bold text-sm">100%</span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                {reviewPhase === "complete" && (
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center">
+                    <Button 
+                      size="lg" 
+                      className="h-14 px-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-2xl font-bold text-lg shadow-xl shadow-emerald-500/20"
+                      onClick={() => { setShowAgentReview(false); setReviewPhase("idle"); }}
+                    >
+                      <CheckCircle2 className="w-5 h-5 mr-2" />
+                      Submit Solution
+                    </Button>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           </div>
