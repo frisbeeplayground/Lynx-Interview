@@ -8,6 +8,10 @@ import {
   Sparkles, 
   Send, 
   Play, 
+  Pause,
+  SkipForward,
+  SkipBack,
+  RotateCcw,
   CheckCircle2, 
   AlertCircle,
   X,
@@ -26,7 +30,9 @@ import {
   MoreVertical,
   Search,
   Command,
-  Braces
+  Braces,
+  Zap,
+  Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +65,98 @@ export default function IDEPage() {
   const [language, setLanguage] = useState("typescript");
   const [showGitModal, setShowGitModal] = useState(false);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [showDryRun, setShowDryRun] = useState(false);
+  const [dryRunStep, setDryRunStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   
+  const dryRunSteps = [
+    {
+      line: 1,
+      description: "Initialize empty HashMap",
+      variables: { map: "{}", i: "-", complement: "-" },
+      array: [2, 7, 11, 15],
+      highlights: [],
+      output: "Created new Map()"
+    },
+    {
+      line: 3,
+      description: "Start loop: i = 0",
+      variables: { map: "{}", i: "0", complement: "-" },
+      array: [2, 7, 11, 15],
+      highlights: [0],
+      output: "Entering loop iteration 0"
+    },
+    {
+      line: 4,
+      description: "Calculate complement: 9 - 2 = 7",
+      variables: { map: "{}", i: "0", complement: "7" },
+      array: [2, 7, 11, 15],
+      highlights: [0],
+      output: "complement = target - nums[0] = 9 - 2 = 7"
+    },
+    {
+      line: 5,
+      description: "Check if 7 exists in map → No",
+      variables: { map: "{}", i: "0", complement: "7" },
+      array: [2, 7, 11, 15],
+      highlights: [0],
+      output: "map.has(7) → false"
+    },
+    {
+      line: 6,
+      description: "Store nums[0]=2 with index 0",
+      variables: { map: "{2: 0}", i: "0", complement: "7" },
+      array: [2, 7, 11, 15],
+      highlights: [0],
+      output: "map.set(2, 0)"
+    },
+    {
+      line: 3,
+      description: "Next iteration: i = 1",
+      variables: { map: "{2: 0}", i: "1", complement: "-" },
+      array: [2, 7, 11, 15],
+      highlights: [1],
+      output: "Entering loop iteration 1"
+    },
+    {
+      line: 4,
+      description: "Calculate complement: 9 - 7 = 2",
+      variables: { map: "{2: 0}", i: "1", complement: "2" },
+      array: [2, 7, 11, 15],
+      highlights: [1],
+      output: "complement = target - nums[1] = 9 - 7 = 2"
+    },
+    {
+      line: 5,
+      description: "Check if 2 exists in map → YES!",
+      variables: { map: "{2: 0}", i: "1", complement: "2" },
+      array: [2, 7, 11, 15],
+      highlights: [0, 1],
+      output: "map.has(2) → true ✓ Found match!"
+    },
+    {
+      line: 7,
+      description: "Return indices [0, 1]",
+      variables: { map: "{2: 0}", i: "1", complement: "2" },
+      array: [2, 7, 11, 15],
+      highlights: [0, 1],
+      output: "return [map.get(2), i] → [0, 1]"
+    }
+  ];
+
+  useEffect(() => {
+    if (isPlaying && showDryRun) {
+      const timer = setTimeout(() => {
+        if (dryRunStep < dryRunSteps.length - 1) {
+          setDryRunStep(prev => prev + 1);
+        } else {
+          setIsPlaying(false);
+        }
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isPlaying, dryRunStep, showDryRun]);
+
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hello! I'm your LynxAI pair programmer. I can help you with architecture, debugging, or explaining complex logic. What are we building today?" }
   ]);
@@ -153,6 +250,17 @@ export default function IDEPage() {
           </Button>
 
           <Separator orientation="vertical" className={`h-6 ${borderColor}`} />
+
+          <Button 
+            size="sm" 
+            variant="outline"
+            className={`h-8 text-xs gap-2 rounded-md px-4 ${theme === "dark" ? "bg-violet-500/10 border-violet-500/30 text-violet-400 hover:bg-violet-500/20" : "bg-violet-50 border-violet-200 text-violet-600 hover:bg-violet-100"}`}
+            onClick={() => { setShowDryRun(true); setDryRunStep(0); setIsPlaying(false); }}
+            data-testid="button-dry-run"
+          >
+            <Eye className="w-3 h-3" />
+            Dry Run
+          </Button>
 
           <Button size="sm" className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white text-xs gap-2 rounded-md px-4 shadow-lg shadow-emerald-500/20">
             <Play className="w-3 h-3 fill-current" />
@@ -415,6 +523,272 @@ export default function IDEPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Live Dry Run Simulation Modal */}
+      <AnimatePresence>
+        {showDryRun && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              transition={{ type: "spring", damping: 25 }}
+              className={`w-full max-w-5xl border rounded-3xl shadow-2xl overflow-hidden ${theme === "dark" ? "bg-[#0f111a] border-white/10" : "bg-white border-gray-200"}`}
+              data-testid="modal-dry-run"
+            >
+              {/* Header */}
+              <div className={`p-5 border-b flex items-center justify-between ${theme === "dark" ? "bg-gradient-to-r from-violet-500/10 to-indigo-500/10 border-white/5" : "bg-gradient-to-r from-violet-50 to-indigo-50 border-gray-100"}`}>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${theme === "dark" ? "bg-violet-500/20" : "bg-violet-100"}`}>
+                    <Zap className="w-6 h-6 text-violet-500" />
+                  </div>
+                  <div>
+                    <h2 className={`text-xl font-bold font-display ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      Live Dry Run Simulation
+                    </h2>
+                    <p className={`text-xs mt-0.5 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                      Step-by-step visual execution • Two Sum Algorithm
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge className={`${theme === "dark" ? "bg-emerald-500/20 text-emerald-400" : "bg-emerald-100 text-emerald-600"} border-none`}>
+                    Step {dryRunStep + 1} of {dryRunSteps.length}
+                  </Badge>
+                  <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setShowDryRun(false)}>
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="p-6 grid grid-cols-2 gap-6">
+                {/* Left: Visualization */}
+                <div className="space-y-6">
+                  {/* Array Visualization */}
+                  <div className={`p-5 rounded-2xl border ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className={`text-[10px] font-bold uppercase tracking-widest ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>
+                        Input Array: nums
+                      </span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${theme === "dark" ? "bg-white/5 text-gray-400" : "bg-gray-200 text-gray-500"}`}>
+                        target = 9
+                      </span>
+                    </div>
+                    <div className="flex gap-3 justify-center">
+                      {dryRunSteps[dryRunStep].array.map((num, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ scale: 0.8 }}
+                          animate={{ 
+                            scale: dryRunSteps[dryRunStep].highlights.includes(idx) ? 1.1 : 1,
+                            y: dryRunSteps[dryRunStep].highlights.includes(idx) ? -8 : 0
+                          }}
+                          transition={{ type: "spring", damping: 15 }}
+                          className={`relative w-16 h-16 rounded-xl flex flex-col items-center justify-center font-mono transition-all duration-300 ${
+                            dryRunSteps[dryRunStep].highlights.includes(idx)
+                              ? "bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-lg shadow-violet-500/30"
+                              : theme === "dark" 
+                                ? "bg-white/5 text-gray-300 border border-white/10" 
+                                : "bg-white text-gray-700 border border-gray-200"
+                          }`}
+                        >
+                          <span className="text-xl font-bold">{num}</span>
+                          <span className={`text-[9px] mt-1 ${dryRunSteps[dryRunStep].highlights.includes(idx) ? "text-white/70" : "opacity-40"}`}>
+                            i={idx}
+                          </span>
+                          {dryRunSteps[dryRunStep].highlights.includes(idx) && (
+                            <motion.div 
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="absolute -top-2 -right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center"
+                            >
+                              <CheckCircle2 className="w-3 h-3 text-white" />
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Variables State */}
+                  <div className={`p-5 rounded-2xl border ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                    <div className={`text-[10px] font-bold uppercase tracking-widest mb-4 ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>
+                      Variable State
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      {Object.entries(dryRunSteps[dryRunStep].variables).map(([key, value]) => (
+                        <motion.div
+                          key={key}
+                          layout
+                          className={`p-3 rounded-xl border ${theme === "dark" ? "bg-black/30 border-white/5" : "bg-white border-gray-200"}`}
+                        >
+                          <div className={`text-[10px] font-medium uppercase mb-1 ${theme === "dark" ? "text-gray-500" : "text-gray-400"}`}>
+                            {key}
+                          </div>
+                          <motion.div
+                            key={value}
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`font-mono text-sm font-bold ${
+                              value === "-" 
+                                ? "text-gray-500" 
+                                : key === "map" 
+                                  ? "text-amber-500" 
+                                  : "text-cyan-500"
+                            }`}
+                          >
+                            {value}
+                          </motion.div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Current Action */}
+                  <motion.div
+                    key={dryRunStep}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`p-4 rounded-2xl border-l-4 border-violet-500 ${theme === "dark" ? "bg-violet-500/10" : "bg-violet-50"}`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-violet-500" />
+                      <span className={`text-xs font-bold ${theme === "dark" ? "text-violet-400" : "text-violet-600"}`}>
+                        Current Step
+                      </span>
+                    </div>
+                    <p className={`text-sm font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                      {dryRunSteps[dryRunStep].description}
+                    </p>
+                  </motion.div>
+                </div>
+
+                {/* Right: Code + Output */}
+                <div className="space-y-4">
+                  {/* Mini Code View */}
+                  <div className={`rounded-2xl border overflow-hidden ${theme === "dark" ? "bg-[#13151f] border-white/5" : "bg-gray-900 border-gray-800"}`}>
+                    <div className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border-b ${theme === "dark" ? "text-gray-500 border-white/5" : "text-gray-400 border-gray-800"}`}>
+                      solution.ts
+                    </div>
+                    <div className="p-4 font-mono text-xs leading-relaxed">
+                      {[
+                        { num: 1, code: "const map = new Map();", highlight: dryRunSteps[dryRunStep].line === 1 },
+                        { num: 2, code: "", highlight: false },
+                        { num: 3, code: "for (let i = 0; i < nums.length; i++) {", highlight: dryRunSteps[dryRunStep].line === 3 },
+                        { num: 4, code: "  const complement = target - nums[i];", highlight: dryRunSteps[dryRunStep].line === 4 },
+                        { num: 5, code: "  if (map.has(complement)) {", highlight: dryRunSteps[dryRunStep].line === 5 },
+                        { num: 6, code: "    map.set(nums[i], i);", highlight: dryRunSteps[dryRunStep].line === 6 },
+                        { num: 7, code: "    return [map.get(complement), i];", highlight: dryRunSteps[dryRunStep].line === 7 },
+                        { num: 8, code: "  }", highlight: false },
+                        { num: 9, code: "}", highlight: false },
+                      ].map((line) => (
+                        <div 
+                          key={line.num}
+                          className={`flex gap-4 px-2 py-0.5 -mx-2 rounded transition-all duration-300 ${
+                            line.highlight 
+                              ? "bg-violet-500/20 border-l-2 border-violet-500" 
+                              : ""
+                          }`}
+                        >
+                          <span className="w-4 text-gray-600 select-none">{line.num}</span>
+                          <span className={line.highlight ? "text-violet-300" : "text-gray-400"}>{line.code}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Console Output */}
+                  <div className={`rounded-2xl border ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                    <div className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border-b flex items-center gap-2 ${theme === "dark" ? "text-gray-500 border-white/5" : "text-gray-400 border-gray-100"}`}>
+                      <Terminal className="w-3 h-3" />
+                      Console Output
+                    </div>
+                    <ScrollArea className="h-24">
+                      <div className="p-4 font-mono text-xs space-y-1">
+                        {dryRunSteps.slice(0, dryRunStep + 1).map((step, idx) => (
+                          <motion.div
+                            key={idx}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className={`${
+                              step.output.includes("✓") 
+                                ? "text-emerald-500" 
+                                : theme === "dark" ? "text-gray-400" : "text-gray-600"
+                            }`}
+                          >
+                            <span className="text-gray-600">&gt;</span> {step.output}
+                          </motion.div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </div>
+              </div>
+
+              {/* Controls Footer */}
+              <div className={`p-5 border-t flex items-center justify-between ${theme === "dark" ? "bg-[#161b22] border-white/5" : "bg-gray-50 border-gray-100"}`}>
+                {/* Progress Bar */}
+                <div className="flex-1 mr-6">
+                  <div className={`h-2 rounded-full overflow-hidden ${theme === "dark" ? "bg-white/10" : "bg-gray-200"}`}>
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${((dryRunStep + 1) / dryRunSteps.length) * 100}%` }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </div>
+                </div>
+
+                {/* Playback Controls */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className={`h-10 w-10 rounded-xl ${theme === "dark" ? "border-white/10 hover:bg-white/5" : ""}`}
+                    onClick={() => { setDryRunStep(0); setIsPlaying(false); }}
+                    disabled={dryRunStep === 0}
+                    data-testid="button-reset"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className={`h-10 w-10 rounded-xl ${theme === "dark" ? "border-white/10 hover:bg-white/5" : ""}`}
+                    onClick={() => setDryRunStep(Math.max(0, dryRunStep - 1))}
+                    disabled={dryRunStep === 0}
+                    data-testid="button-step-back"
+                  >
+                    <SkipBack className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    className={`h-12 w-12 rounded-xl ${
+                      isPlaying 
+                        ? "bg-amber-500 hover:bg-amber-400" 
+                        : "bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-400 hover:to-indigo-400"
+                    } text-white shadow-lg`}
+                    onClick={() => setIsPlaying(!isPlaying)}
+                    data-testid="button-play-pause"
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className={`h-10 w-10 rounded-xl ${theme === "dark" ? "border-white/10 hover:bg-white/5" : ""}`}
+                    onClick={() => setDryRunStep(Math.min(dryRunSteps.length - 1, dryRunStep + 1))}
+                    disabled={dryRunStep === dryRunSteps.length - 1}
+                    data-testid="button-step-forward"
+                  >
+                    <SkipForward className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
